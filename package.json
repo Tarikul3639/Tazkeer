@@ -28,6 +28,12 @@
     "typescript": "5.3.3"
   },
   "manifest": {
+    "manifest_version": 3,
+    "permissions": [
+      "storage",
+      "notifications",
+      "alarms"
+    ],
     "host_permissions": [
       "https://*/*"
     ]

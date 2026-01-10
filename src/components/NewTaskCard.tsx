@@ -10,6 +10,7 @@ interface NewTaskCard {
   date: string // ISO date
   type: "Daily" | "One-Time" // Task type
   createdAt: number // timestamp
+  isNotified?: boolean
 }
 
 const TASKS_KEY = "Tazkeer_Tasks"
@@ -27,7 +28,8 @@ export const NewTaskCard = ({
     remindAt: "12:00",
     date: new Date().toISOString().split("T")[0],
     type: "Daily",
-    createdAt: Date.now()
+    createdAt: Date.now(),
+    isNotified: false
   } as NewTaskCard)
 
   const handleSave = async () => {
@@ -51,7 +53,8 @@ export const NewTaskCard = ({
       const newTask = {
         ...data,
         id: crypto.randomUUID(),
-        createdAt: Date.now()
+        createdAt: Date.now(),
+        isNotified: false
       }
 
       const stored = localStorage.getItem(TASKS_KEY)
@@ -67,7 +70,8 @@ export const NewTaskCard = ({
         remindAt: "12:00",
         date: new Date().toISOString().split("T")[0],
         type: "Daily",
-        createdAt: 0
+        createdAt: 0,
+        isNotified: false
       })
 
       setIsOpen(false)

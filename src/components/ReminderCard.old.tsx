@@ -3,12 +3,12 @@ import React, { useEffect, useState } from "react"
 
 interface ReminderCardProps {
   task: {
-    id: string
-    title: string
-    remindAt: string
-    date: string
-    type: "Daily" | "One-Time"
-    createdAt: number
+    id: string // crypto.randomUUID()
+    title: string // Task title
+    remindAt: string // ISO date-time
+    date: string // ISO date
+    type: "Daily" | "One-Time" // Task type
+    createdAt: number // timestamp
     isNotified?: boolean
   }
   deleting: boolean
@@ -17,6 +17,13 @@ interface ReminderCardProps {
 
 export function ReminderCard({ task, deleting, onDelete }: ReminderCardProps) {
   const [timeLeft, setTimeLeft] = useState<string>("")
+  const [audio] = useState(
+    () => new Audio(chrome.runtime.getURL("alarms/subhanallah.mp3"))
+  )
+
+  useEffect(() => {
+  audio.load()
+}, [])
 
   const [hour, minute] = task.remindAt.split(":").map(Number)
   const time = new Date()
@@ -31,15 +38,47 @@ export function ReminderCard({ task, deleting, onDelete }: ReminderCardProps) {
     hour12: true
   })
 
+//   useEffect(() => {
+//     const triggerTime = new Date(`${task.date}T${task.remindAt}`).getTime()
+    
+//     // শুধু যদি ভবিষ্যৎ সময় হয় তখনই অ্যালার্ম সেট হবে
+//     if (triggerTime > Date.now()) {
+//       chrome.alarms.create(task.id, {
+//         when: triggerTime,
+//         periodInMinutes: task.type === "Daily" ? 1440 : undefined // Daily হলে ২৪ ঘণ্টা পর পর
+//       })
+//     }
+
+//     // ২. অ্যালার্ম লিসেনার (অ্যালার্ম বাজলে যা হবে)
+//     const alarmListener = (alarm: chrome.alarms.Alarm) => {
+//       if (alarm.name === task.id) {
+//         // নোটিফিকেশন দেখানো
+//         chrome.notifications.create(task.id, {
+//           type: "basic",
+//           title: "Tazkeer Reminder",
+//           message: task.title,
+//           iconUrl: "icons/48.png", // আপনার আইকন পাথ নিশ্চিত করুন
+//           priority: 2
+//         })
+
+//         // অডিও প্লে করা
+//         audio.play().catch(() => console.log("Audio playback blocked by browser policy"))
+//       }
+//     }
+
+//     chrome.alarms.onAlarm.addListener(alarmListener)
+//     return () => chrome.alarms.onAlarm.removeListener(alarmListener)
+//   }, [task.id, task.date, task.remindAt, task.type, audio])
+
   useEffect(() => {
     const calculateTimeLeft = () => {
       const now = new Date()
 
-      // Parse task date and time
+      // task.date + task.remindAt
       const [year, month, day] = task.date.split("-").map(Number)
       const [hours, minutes] = task.remindAt.split(":").map(Number)
 
-      let targetTime = new Date(year, month - 1, day, hours, minutes, 0, 0)
+      const targetTime = new Date(year, month - 1, day, hours, minutes, 0, 0)
 
       // If Daily and target time has passed, shift to next day
       if (targetTime.getTime() <= now.getTime() && task.type === "Daily") {
@@ -48,8 +87,18 @@ export function ReminderCard({ task, deleting, onDelete }: ReminderCardProps) {
 
       const diffMs = targetTime.getTime() - now.getTime()
 
-      if (diffMs <= 0 && task.type === "One-Time") {
+      if (diffMs <= 0) {
         setTimeLeft("Passed")
+
+        if (!task.isNotified) {
+          audio.play()
+          if (Notification.permission === "granted") {
+            new Notification("Tazkeer Reminder", {
+              body: task.title
+            })
+          }
+          task.isNotified = true
+        }
         return
       }
 
@@ -58,20 +107,18 @@ export function ReminderCard({ task, deleting, onDelete }: ReminderCardProps) {
       const diffSecs = Math.floor((diffMs % (1000 * 60)) / 1000)
 
       if (diffHrs > 0) {
-        setTimeLeft(`${diffHrs}h ${diffMins}m`)
+        setTimeLeft(`${diffHrs}:${diffMins}:${diffSecs}`)
       } else if (diffMins > 0) {
-        setTimeLeft(`${diffMins}m ${diffSecs}s`)
-      } else if (diffSecs >= 0) {
-        setTimeLeft(`${diffSecs}s`)
+        setTimeLeft(`${diffMins}:${diffSecs}`)
       } else {
-        setTimeLeft("Now")
+        setTimeLeft(`0:${diffSecs}`)
       }
     }
 
     calculateTimeLeft()
-    const timer = setInterval(calculateTimeLeft, 1000)
+    const timer = setInterval(calculateTimeLeft, 1000) // update every second
     return () => clearInterval(timer)
-  }, [task.remindAt, task.date, task.type])
+  }, [task.remindAt, task.date, task.type, task.isNotified, audio])
 
   return (
     <div className="group relative mx-3 mt-2 overflow-hidden rounded-xl bg-white px-3 py-2.5 shadow-sm ring-1 ring-slate-100 transition-all hover:ring-blue-300">
@@ -94,16 +141,11 @@ export function ReminderCard({ task, deleting, onDelete }: ReminderCardProps) {
                 {formattedTime}
               </span>
 
+              {/*  */}
               <span className="flex items-center gap-0.5 rounded-full bg-orange-50 px-1.5 py-0.5 text-xs font-bold text-orange-600 border border-orange-100">
                 <Timer size={14} />
                 {timeLeft}
               </span>
-
-              {task.type === "Daily" && (
-                <span className="rounded-full bg-teal-50 px-1.5 py-0.5 text-[10px] font-bold text-teal-600 border border-teal-100">
-                  DAILY
-                </span>
-              )}
             </div>
           </div>
         </div>
@@ -111,8 +153,7 @@ export function ReminderCard({ task, deleting, onDelete }: ReminderCardProps) {
         <div className="flex items-center">
           <button
             onClick={() => onDelete(task.id)}
-            disabled={deleting}
-            className="p-1.5 text-slate-300 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100 disabled:opacity-50">
+            className="p-1.5 text-slate-300 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100">
             {deleting ? (
               <div className="h-3 w-3 animate-spin rounded-full border-2 border-rose-500 border-t-transparent" />
             ) : (
