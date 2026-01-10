@@ -4,13 +4,14 @@
   "version": "0.0.1",
   "description": "Tazkeer is a simple daily routine and task reminder extension that helps you stay organized and mindful. It sends timely notifications to remind you of your tasks, habits, and important moments—so nothing important is forgotten.",
   "author": "Tarikul Islam",
-  "icon": "assets/icon.png",
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",
     "package": "plasmo package"
   },
   "dependencies": {
+    "framer-motion": "^12.25.0",
+    "lucide-react": "^0.562.0",
     "plasmo": "0.90.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",

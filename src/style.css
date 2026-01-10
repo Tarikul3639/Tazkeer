@@ -9,10 +9,26 @@
   box-sizing: border-box;
 }
 
+@theme {
+  --color-tazkeer-deep: #2d3e33; /* Deep Forest Green */
+  --color-tazkeer-sage: #8daa91; /* Soft Sage */
+  --color-tazkeer-sand: #f9f7f2; /* Warm Paper White */
+
+  @keyframes soft-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+}
+
 body {
   font-family: "Inter", sans-serif;
   border-radius: 10rem;
-  background-color: aqua;
+  background-color: white;
   overflow: hidden;
   margin: 0;
   padding: 0;
