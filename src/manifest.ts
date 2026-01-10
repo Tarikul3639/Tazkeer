@@ -6,12 +6,6 @@ export const manifest = {
   description:
     "Tazkeer is a simple daily routine and task reminder extension.",
   action: {
-    default_icon: {
-      16: "icons/icon.png",
-      32: "icons/icon.png",
-      48: "icons/icon.png",
-      128: "icons/icon.png" 
-    },
     default_popup: "popup.html"
   },
   host_permissions: ["https://*/*"]
