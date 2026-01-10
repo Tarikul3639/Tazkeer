@@ -8,3 +8,13 @@
   all: initial;
   box-sizing: border-box;
 }
+
+body {
+  font-family: "Inter", sans-serif;
+  border-radius: 10rem;
+  background-color: aqua;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
