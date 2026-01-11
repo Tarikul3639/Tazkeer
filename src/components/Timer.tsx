@@ -34,7 +34,12 @@ export default function TimerPage() {
   const percent = initialTime ? (seconds / initialTime) * 100 : 0
 
   return (
-    <div className="flex items-center justify-center p-3 bg-blue-50/30">
+    <motion.div
+      initial={{ height: 0, opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0, height: "auto" }}
+      exit={{ opacity: 0, height: 0 }}
+      transition={{ duration: 0.3 }}
+      className="flex items-center justify-center p-3 bg-blue-50/30">
       <div className="w-full max-w-[380px] bg-white rounded-[28px] p-5 border border-blue-50 shadow text-center">
         {/* Header */}
         <h2 className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-4 flex items-center justify-center gap-2">
@@ -134,6 +139,6 @@ export default function TimerPage() {
           ))}
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }

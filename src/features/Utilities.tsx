@@ -55,23 +55,32 @@ export default function ToolsPage({ page, setPage }: ToolsPageProps) {
       <div className="bg-blue-50/50 px-4 pb-6 pt-1 border-none">
         <div className="max-w-md mx-auto">
           {/* Header Section */}
-          <div className="mb-6 px-1 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              {/* Icon with a subtle glow */}
-              <div className="relative">
-                <div className="absolute inset-0 bg-blue-200 blur-lg opacity-40 rounded-full" />
-                <Sparkles size={24} className="relative text-blue-600" />
+          <div className="mb-4 pb-2 px-1 flex flex-col items-center justify-center relative">
+            <div className="flex items-center gap-3.5 ">
+              {/* Icon with a more refined glow and ring */}
+              <div className="relative flex items-center justify-center">
+                {/* Outer Rotating/Soft Glow */}
+                <div className="absolute inset-0 bg-blue-400 blur-md opacity-20 rounded-full animate-pulse" />
+
+                {/* Icon Background */}
+                <div className="relative h-10 w-10 bg-gradient-to-tr from-blue-600 to-blue-400 rounded-xl flex items-center justify-center shadow-lg shadow-blue-200">
+                  <Sparkles size={18} className="text-white" />
+                </div>
               </div>
 
               <div className="flex flex-col">
-                <h1 className="text-[17px] font-extrabold text-blue-950 opacity-90 tracking-tight leading-none">
-                  Utility Tools
+                <h1 className="text-[17px] font-[900] text-slate-800 tracking-tight leading-none">
+                  Utility <span className="text-blue-600">Tools</span>
                 </h1>
-                <p className="text-[10px] text-slate-400 font-semibold mt-1 uppercase tracking-wider">
-                  Productivity Suite
-                </p>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <span className="h-[2px] w-3 bg-blue-500 rounded-full"></span>
+                  <p className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.15em]">
+                    Productivity Suite
+                  </p>
+                </div>
               </div>
             </div>
+             <div className="mt-3 h-[1px] w-full bg-gradient-to-r from-transparent via-blue-200 to-transparent"></div>
           </div>
 
           {/* Tools List */}
