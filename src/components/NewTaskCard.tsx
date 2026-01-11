@@ -1,5 +1,4 @@
 import { AnimatePresence, motion } from "framer-motion"
-import type { n } from "framer-motion/dist/types.d-a9pt5qxk"
 import { ChevronDown, Clock, Plus, Tag } from "lucide-react"
 import React, { useState } from "react"
 
@@ -83,15 +82,20 @@ export const NewTaskCard = ({
   return (
     <motion.div
       layout
-      className="mx-4 mt-6 bg-white rounded-3xl border-2 border-dashed border-blue-200 shadow-xl shadow-blue-500/5 overflow-hidden"
+      initial={{ height: 0, opacity: 0, y: 10 }}
       animate={{
+        opacity: 1,
+        y: 0,
+        height: "auto",
         padding: isOpen ? "20px" : "10px"
       }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}>
+      exit={{ opacity: 0, height: 0 }}
+      transition={{ duration: 0.3 }}
+      className="mx-4 mt-6 bg-white rounded-3xl border-2 border-dashed border-blue-200 shadow-xl shadow-blue-500/5 overflow-hidden">
       {/* The Toggle Button - Always Visible */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold transition-all duration-300 active:scale-[0.98] ${
+        className={`group w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold transition-all duration-300 active:scale-[0.98] hover:scale-[1.01] ${
           isOpen
             ? "bg-slate-100 text-slate-500 mb-4 hover:bg-pink-50 hover:text-pink-600 shadow-inner"
             : "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
@@ -99,7 +103,11 @@ export const NewTaskCard = ({
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.3 }}>
-          {isOpen ? <ChevronDown size={20} /> : <Plus size={20} />}
+          {isOpen ? (
+            <ChevronDown size={20} />
+          ) : (
+            <Plus size={20} className="group-hover:rotate-6" />
+          )}
         </motion.div>
         <span>{isOpen ? "Close Form" : "Assign New Task"}</span>
       </button>
@@ -120,7 +128,7 @@ export const NewTaskCard = ({
                 placeholder="What should we remind you of?"
                 value={data.title}
                 onChange={(e) => setData({ ...data, title: e.target.value })}
-                className="w-full pl-0 pr-4 py-2 pl-2 bg-transparent border-b border-slate-200 focus:border-blue-500 outline-none text-slate-700 placeholder:text-slate-300 transition-all font-medium"
+                className="w-full pr-4 py-2 pl-2 bg-transparent border-b border-slate-200 focus:border-blue-500 outline-none text-slate-700 placeholder:text-slate-300 transition-all font-medium"
               />
             </div>
 

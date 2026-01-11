@@ -1,3 +1,4 @@
+import { motion } from "framer-motion"
 import { CheckCircle2, Clock, MoreVertical, Timer, Trash2 } from "lucide-react"
 import React, { useEffect, useState } from "react"
 
@@ -74,23 +75,28 @@ export function ReminderCard({ task, deleting, onDelete }: ReminderCardProps) {
   }, [task.remindAt, task.date, task.type])
 
   return (
-    <div className="group relative mx-3 mt-2 overflow-hidden rounded-xl bg-white px-3 py-2.5 shadow-sm ring-1 ring-slate-100 transition-all hover:ring-blue-300">
+    <motion.div
+      initial={{ opacity: 0, y: 10, height: 0 }}
+      animate={{ opacity: 1, y: 0, height: "auto" }}
+      exit={{ opacity: 0, y: 10, height: 0 }}
+      transition={{ duration: 0.3 }}
+      className="group relative mx-3 mt-2 overflow-hidden rounded-xl bg-blue-10 px-3 py-2.5 shadow-sm ring-1 ring-slate-100 transition-all hover:ring-blue-300 border border-blue-100">
       <div className="absolute left-0 top-0 h-full w-[3px] bg-blue-500 opacity-0 transition-opacity group-hover:opacity-100" />
 
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-3 overflow-hidden">
           <button className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-300 transition hover:border-blue-500 hover:text-blue-500 focus:bg-blue-50">
-            <CheckCircle2 size={14} />
+            <CheckCircle2 size={18} />
           </button>
 
           <div className="flex flex-col min-w-0">
-            <h3 className="truncate text-[13px] font-semibold text-slate-700 leading-tight">
+            <h3 className="truncate text-sm font-semibold text-slate-800 leading-tight">
               {task.title}
             </h3>
 
             <div className="flex items-center gap-2 mt-0.5">
               <span className="flex items-center gap-0.5 text-[10px] font-bold text-blue-600 uppercase">
-                <Clock size={10} />
+                <Clock size={11} />
                 {formattedTime}
               </span>
 
@@ -124,6 +130,6 @@ export function ReminderCard({ task, deleting, onDelete }: ReminderCardProps) {
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
