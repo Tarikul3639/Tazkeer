@@ -55,32 +55,42 @@ export default function ToolsPage({ page, setPage }: ToolsPageProps) {
       <div className="bg-blue-50/50 px-4 pb-6 pt-1 border-none">
         <div className="max-w-md mx-auto">
           {/* Header Section */}
-          <div className="mb-4 pb-2 px-1 flex flex-col items-center justify-center relative">
-            <div className="flex items-center gap-3.5 ">
-              {/* Icon with a more refined glow and ring */}
+          <div className="mb-6 px-1 flex flex-col items-center justify-center relative select-none">
+            {/* The Main Container with a Glassy Feel */}
+            <div className="group flex items-center gap-4 border border-blue-100/60 rounded-[22px] bg-blue-50/50 backdrop-blur-sm px-5 py-3 shadow-[0_10px_25px_-5px_rgba(59,130,246,0.1)] transition-all duration-300 hover:shadow-blue-200/30 hover:border-blue-200">
+              {/* Icon with a refined glow and ring */}
               <div className="relative flex items-center justify-center">
-                {/* Outer Rotating/Soft Glow */}
-                <div className="absolute inset-0 bg-blue-400 blur-md opacity-20 rounded-full animate-pulse" />
+                {/* Dynamic Pulse Glow */}
+                <div className="absolute inset-0 bg-blue-400 blur-xl opacity-20 rounded-full animate-pulse group-hover:opacity-40 transition-opacity" />
 
-                {/* Icon Background */}
-                <div className="relative h-10 w-10 bg-gradient-to-tr from-blue-600 to-blue-400 rounded-xl flex items-center justify-center shadow-lg shadow-blue-200">
-                  <Sparkles size={18} className="text-white" />
+                {/* Icon Background with Gradient */}
+                <div className="relative h-11 w-11 bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:rotate-6 transition-transform duration-500">
+                  <Sparkles size={20} className="text-white drop-shadow-sm" />
                 </div>
               </div>
 
               <div className="flex flex-col">
-                <h1 className="text-[17px] font-[900] text-slate-800 tracking-tight leading-none">
-                  Utility <span className="text-blue-600">Tools</span>
+                <h1 className="text-[18px] font-[1000] text-slate-800 tracking-tight leading-none">
+                  Utility{" "}
+                  <span className="text-blue-600 drop-shadow-[0_0_15px_rgba(37,99,235,0.1)]">
+                    Tools
+                  </span>
                 </h1>
-                <div className="flex items-center gap-1.5 mt-1">
-                  <span className="h-[2px] w-3 bg-blue-500 rounded-full"></span>
-                  <p className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.15em]">
+
+                <div className="flex items-center gap-2 mt-1.5">
+                  <div className="flex gap-0.5">
+                    <span className="h-1 w-1 rounded-full bg-blue-500"></span>
+                    <span className="h-1 w-3 rounded-full bg-blue-500/30"></span>
+                  </div>
+                  <p className="text-[9px] text-slate-400 font-extrabold uppercase tracking-[0.2em] leading-none">
                     Productivity Suite
                   </p>
                 </div>
               </div>
             </div>
-             <div className="mt-3 h-[1px] w-full bg-gradient-to-r from-transparent via-blue-200 to-transparent"></div>
+
+            {/* Subtle shadow accent at the bottom */}
+            <div className="absolute -bottom-2 w-1/2 h-4 bg-blue-500/5 blur-2xl rounded-full -z-10" />
           </div>
 
           {/* Tools List */}
@@ -91,7 +101,7 @@ export default function ToolsPage({ page, setPage }: ToolsPageProps) {
                 <a
                   key={tool.title}
                   onClick={() => setPage(tool.href)}
-                  className="group relative cursor-pointer overflow-hidden bg-blue-50 rounded-[20px] p-3.5 border border-blue-100 
+                  className="group relative cursor-pointer overflow-hidden bg-blue-50 rounded-2xl p-3.5 border border-blue-100 
              transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-0.5 active:scale-[0.98]">
                   {/* Hover Glow */}
                   <div className="absolute -right-2 -top-2 w-20 h-20 bg-blue-50/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity blur-2xl" />
