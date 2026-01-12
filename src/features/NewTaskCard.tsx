@@ -83,6 +83,7 @@ export const NewTaskCard = ({
       exit={{ opacity: 0, height: 0 }}
       transition={{ duration: 0.3 }}
       className="mx-4 mt-6 bg-white rounded-3xl border-2 border-dashed border-blue-200 shadow-xl shadow-blue-500/5 overflow-hidden">
+
       {/* The Toggle Button - Always Visible */}
       <button
         onClick={() => setIsOpen(!isOpen)}

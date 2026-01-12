@@ -83,7 +83,7 @@ export default function Stopwatch() {
           {/* Reset Button */}
           <button
             onClick={resetTimer}
-            className="p-3 rounded-full bg-blue-50 border border-slate-100 text-slate-400 flex items-center justify-center hover:bg-blue-100 active:scale-90 transition-all duration-300 hover:text-slate-500 shadow-sm shadow-blue-200 hover:border-blue-100">
+            className="p-3 rounded-full bg-blue-50 text-blue-400 hover:bg-red-50 hover:text-red-500 transition-all flex items-center justify-center">
             <RotateCcw size={16} />
           </button>
 

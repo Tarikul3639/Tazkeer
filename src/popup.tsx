@@ -1,6 +1,7 @@
 import "~style.css"
 
 import { AnimatePresence } from "framer-motion"
+import { Tag } from "lucide-react"
 import { useEffect, useState } from "react"
 
 import { NewTaskCard } from "~features/NewTaskCard"
@@ -16,8 +17,8 @@ const TASKS_KEY = "Tazkeer_Tasks"
 
 function IndexPopup() {
   const [tasks, setTasks] = useState<ITask[]>([])
-  const [deleting, setDeleting] = useState(false)
-  const [page, setPage] = useState<IPage>("tools")
+  // const [deleting, setDeleting] = useState(false)
+  const [page, setPage] = useState<IPage>("tasks")
 
   useEffect(() => {
     // request notification permission
@@ -55,8 +56,29 @@ function IndexPopup() {
       <AnimatePresence initial={false}>
         {page === "tasks" && (
           <>
-            {" "}
-            <div className="space-y-2 p-3">
+            <div className="space-y-2 p-3 border-t border-b border-blue-100">
+              {/* Header Section */}
+              <div className="px-5 py-4 flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-black text-slate-800 tracking-tight">
+                    Task <span className="text-blue-600">Reminders</span>
+                  </h2>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[2px] mt-0.5">
+                    Manage your daily goals
+                  </p>
+                </div>
+
+                <div className="relative">
+                  <div className="w-10 h-10 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 shadow-sm border border-blue-100/50">
+                    <Tag size={20} />
+                    {tasks.length > 0 && (
+                      <span className="absolute -top-1 -right-1 w-4 h-4 bg-pink-500 text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-white">
+                        {tasks.length}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
               {tasks.map((task) => (
                 <ReminderCard
                   key={task.id}
@@ -66,7 +88,7 @@ function IndexPopup() {
                 />
               ))}
             </div>
-            <NewTaskCard onAdd={addTask} />{" "}
+            <NewTaskCard onAdd={addTask} />
           </>
         )}
       </AnimatePresence>

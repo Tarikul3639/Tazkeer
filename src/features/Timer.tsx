@@ -1,140 +1,185 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { BellRing, Hourglass, Pause, Play, RotateCcw } from "lucide-react"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 
 import { TimeInput } from "../components/TimeInput"
 
 export default function TimerPage() {
-  const [seconds, setSeconds] = useState(0)
+  const [timeLeft, setTimeLeft] = useState(0)
   const [initialTime, setInitialTime] = useState(0)
   const [isActive, setIsActive] = useState(false)
 
+  const timerRef = useRef<NodeJS.Timeout | null>(null)
+
   useEffect(() => {
-    if (!isActive || seconds <= 0) return
-    const i = setInterval(() => setSeconds((s) => s - 1), 1000)
-    return () => clearInterval(i)
-  }, [isActive, seconds])
+    if (isActive && timeLeft > 0) {
+      timerRef.current = setInterval(() => {
+        setTimeLeft((prev) => (prev <= 50 ? 0 : prev - 50))
+      }, 50)
+    } else {
+      if (timeLeft === 0) setIsActive(false)
+      if (timerRef.current) clearInterval(timerRef.current)
+    }
 
-  const formatTime = (t: number) => {
-    const h = Math.floor(t / 3600)
-    const m = Math.floor((t % 3600) / 60)
-    const s = t % 60
-    return `${h.toString().padStart(2, "0")}:${m
-      .toString()
-      .padStart(2, "0")}:${s.toString().padStart(2, "0")}`
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current)
+    }
+  }, [isActive, timeLeft])
+
+  const formatTime = (totalMs: number) => {
+    const hours = Math.floor(totalMs / 3600000)
+    const minutes = Math.floor((totalMs % 3600000) / 60000)
+    const seconds = Math.floor((totalMs % 60000) / 1000)
+    const milliseconds = Math.floor((totalMs % 1000) / 10)
+
+    return {
+      hours: hours.toString().padStart(2, "0"),
+      minutes: minutes.toString().padStart(2, "0"),
+      seconds: seconds.toString().padStart(2, "0"),
+      milliseconds: milliseconds.toString().padStart(2, "0")
+    }
   }
+
   const handleTimeChange = (v: { h: number; m: number; s: number }) => {
-    const totalSeconds = v.h * 3600 + v.m * 60 + v.s
-    setSeconds(totalSeconds)
-    setInitialTime(totalSeconds)
+    const totalMs = (v.h * 3600 + v.m * 60 + v.s) * 1000
+    setTimeLeft(totalMs)
+    setInitialTime(totalMs)
   }
 
-  const percent = initialTime ? (seconds / initialTime) * 100 : 0
+  const percent = initialTime ? (timeLeft / initialTime) * 100 : 0
+  const timeStrings = formatTime(timeLeft)
 
   return (
     <motion.div
-      initial={{ height: 0, opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0, height: "auto" }}
-      exit={{ opacity: 0, height: 0 }}
-      transition={{ duration: 0.3 }}
-      className="flex items-center justify-center p-3 bg-blue-50/30">
-      <div className="w-full max-w-[380px] bg-white rounded-[28px] p-5 border border-blue-50 shadow text-center">
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="flex items-center justify-center p-2 bg-transparent">
+      <div className="w-full bg-white rounded-[32px] p-5 shadow-[0_20px_40px_-10px_rgba(186,210,255,0.25)] border border-blue-50 text-center">
         {/* Header */}
-        <h2 className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-4 flex items-center justify-center gap-2">
-          <Hourglass size={12} /> Countdown Timer
-        </h2>
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 bg-blue-50/50 rounded-full">
+            <Hourglass
+              size={10}
+              className={`text-blue-500 ${isActive ? "animate-spin" : ""}`}
+            />
+            <span className="text-[8px] font-black text-blue-600 uppercase tracking-widest">
+              Nexion Cooldown
+            </span>
+          </div>
+          <button className="text-blue-200 hover:text-blue-400 transition-colors">
+            <BellRing size={16} />
+          </button>
+        </div>
 
-        {/* Progress */}
-        <div className="relative w-40 h-40 mx-auto mb-5 flex items-center justify-center">
-          <svg className="absolute inset-0 w-full h-full -rotate-90">
+        {/* Circular Progress Area (180px) */}
+        <div className="relative w-[180px] h-[180px] mx-auto mb-6 flex items-center justify-center">
+          <svg
+            className={`${isActive ? "opacity-100" : "opacity-30"} absolute inset-0 w-full h-full -rotate-90`}
+            viewBox="0 0 180 180"
+            style={{ overflow: "visible" }}>
             <circle
-              cx="80"
-              cy="80"
-              r="74"
-              stroke="#E5E7EB"
-              strokeWidth="6"
+              cx="90"
+              cy="90"
+              r="80"
+              stroke="#F1F5F9"
+              strokeWidth="14"
               fill="none"
             />
             <motion.circle
-              cx="80"
-              cy="80"
-              r="74"
+              cx="90"
+              cy="90"
+              r="80"
               stroke="#3B82F6"
-              strokeWidth="6"
+              strokeWidth="14"
               fill="none"
               strokeLinecap="round"
-              strokeDasharray="465"
-              animate={{
-                strokeDashoffset: 465 - (465 * percent) / 100
-              }}
+              strokeDasharray="502.6"
+              animate={{ strokeDashoffset: 502.6 - (502.6 * percent) / 100 }}
+              transition={{ duration: 0.1, ease: "linear" }}
+              className="drop-shadow-[0_0_4px_rgba(59,130,246,0.2)]"
             />
           </svg>
 
-          {/* Time */}
-          {isActive ? (
-            <motion.div
-              key={seconds}
-              className="text-3xl font-black text-slate-800 tracking-tight">
-              {formatTime(seconds)}
-            </motion.div>
-          ) : (
-            <TimeInput
-              value={{
-                h: Math.floor(initialTime / 3600),
-                m: Math.floor((initialTime % 3600) / 60),
-                s: initialTime % 60
-              }}
-              onChange={handleTimeChange}
-            />
-          )}
+          <AnimatePresence mode="wait">
+            {!isActive && (timeLeft === initialTime || timeLeft === 0) ? (
+              <motion.div
+                key="input"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="z-10">
+                <TimeInput
+                  value={{
+                    h: Math.floor(timeLeft / 3600000),
+                    m: Math.floor((timeLeft % 3600000) / 60000),
+                    s: Math.floor((timeLeft % 60000) / 1000)
+                  }}
+                  onChange={handleTimeChange}
+                />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="display"
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="relative flex flex-col items-center justify-center z-10">
+                <div className="text-3xl font-black text-slate-800 tracking-tighter tabular-nums">
+                  {timeStrings.hours}:{timeStrings.minutes}:
+                  {timeStrings.seconds}
+                </div>
+                <div className="absolute top-9 text-lg font-bold text-blue-500/60 tabular-nums">
+                  .{timeStrings.milliseconds}S
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        <p className="text-[10px] font-bold text-slate-400 mb-4">REMAINING</p>
-
-        {/* Controls */}
-        <div className="flex items-center justify-center gap-4">
+        {/* Compact Controls */}
+        <div className="flex items-center justify-center gap-5 mb-6">
           <button
             onClick={() => {
-              setSeconds(0)
+              setTimeLeft(0)
+              setInitialTime(0)
               setIsActive(false)
             }}
-            className="w-10 h-10 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center">
+            className="w-10 h-10 border border-blue-50 rounded-full bg-blue-50 text-blue-400 hover:bg-red-50 hover:text-red-500 transition-all flex items-center justify-center">
             <RotateCcw size={16} />
           </button>
 
           <button
             onClick={() => setIsActive(!isActive)}
-            className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow transition-all ${
+            disabled={timeLeft === 0}
+            className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg transition-all active:scale-90 ${
               isActive
-                ? "bg-amber-100 text-amber-600"
-                : "bg-blue-600 text-white"
-            }`}>
+                ? "bg-amber-100 text-amber-600 shadow-amber-100"
+                : "bg-blue-600 text-white shadow-blue-200"
+            } disabled:opacity-30`}>
             {isActive ? (
-              <Pause size={22} />
+              <Pause size={24} fill="currentColor" />
             ) : (
-              <Play size={22} className="ml-1" />
+              <Play size={24} fill="currentColor" className="ml-0.5" />
             )}
           </button>
 
-          <button className="w-10 h-10 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center">
-            <BellRing size={16} />
-          </button>
+          <div className="w-10 h-10" />
         </div>
 
-        {/* Presets */}
-        <div className="mt-4 grid grid-cols-3 gap-2">
-          {[5, 10, 15, 30, 60].map((m) => (
+        {/* Grid Presets */}
+        <div className="grid grid-cols-4 gap-2">
+          {[5, 15, 30, 60].map((m) => (
             <button
               key={m}
               onClick={() => {
-                setSeconds(m * 60)
-                setInitialTime(m * 60)
+                const ms = m * 60 * 1000
+                setTimeLeft(ms)
+                setInitialTime(ms)
                 setIsActive(false)
               }}
-              className="py-2 rounded-xl bg-slate-100 text-[11px] font-bold text-slate-600 hover:bg-blue-600 hover:text-white transition">
-              {m}m
+              className="py-2 rounded-xl bg-blue-50/50 text-[10px] font-bold text-blue-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm active:translate-y-0.5">
+              {m}M
             </button>
           ))}
         </div>

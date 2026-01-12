@@ -1,7 +1,7 @@
 "use client"
 
 import { AnimatePresence, motion } from "framer-motion"
-import { ArrowRight, CheckSquare, Clock, Sparkles, Timer } from "lucide-react"
+import { ArrowRight, CheckSquare, Hourglass, Sparkles, Timer } from "lucide-react"
 import React from "react"
 import type { ITask, IPage, ITool } from "../types"
 
@@ -21,7 +21,7 @@ const tools: ITool[] = [
   {
     title: "Timer",
     description: "Set countdown timers",
-    icon: Clock,
+    icon: Hourglass,
     href: "timer",
     color: "bg-indigo-500"
   },
