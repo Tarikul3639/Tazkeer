@@ -51,37 +51,37 @@ It helps busy professionals, students, and remote workers to:
 * **Use stopwatch tools** for time tracking
 * Stay productive without switching between multiple apps
 
-Instead of heavy, complex task managers, **Tazkeer** focuses on **simplicity, speed, and minimal distraction**—perfect for those who need quick, actionable reminders throughout their workday.
+Instead of heavy, complex task managers, **Tazkeer** focuses on **simplicity, speed, and minimal distraction**—perfect for those who need quick, actionable reminders throughout their workday. 
 
 ---
 
-## 👥 Who Is This For? 
+## Who Is This For? 
 
-### 💼 **Corporate Employees & Remote Workers**
+### **Corporate Employees & Remote Workers**
 - Manage daily standup tasks
 - Set reminders for meetings and deadlines
 - Track break times to avoid burnout
 - Use stopwatch for time-boxed activities
 
-### 👨‍💻 **Software Developers & Engineers**
+### **Software Developers & Engineers**
 - Pomodoro-style focus sessions with cooldown timers
 - Quick task tracking between sprints
 - Time tracking for code reviews and debugging
 - Reminder for daily commits or documentation
 
-### 🎓 **Students & Researchers**
+### **Students & Researchers**
 - Study session timers
 - Assignment and exam reminders
 - Break management during long study hours
 - Track time spent on different subjects
 
-### 🎨 **Freelancers & Creatives**
+### **Freelancers & Creatives**
 - Client deadline reminders
 - Billable hour tracking with stopwatch
 - Task management for multiple projects
 - Break reminders to maintain creativity
 
-### 📊 **Project Managers & Team Leads**
+### **Project Managers & Team Leads**
 - Quick task notes for follow-ups
 - Meeting and review reminders
 - Time tracking for project phases
@@ -91,7 +91,7 @@ Instead of heavy, complex task managers, **Tazkeer** focuses on **simplicity, sp
 
 ## Core Features
 
-### 📝 **Task Management**
+### **Task Management**
 
 * Add new tasks quickly without leaving your browser
 * Assign reminders with specific time & date
@@ -99,29 +99,29 @@ Instead of heavy, complex task managers, **Tazkeer** focuses on **simplicity, sp
 * Clean, minimalist task list view
 * Browser notifications when tasks are due
 
-### ⏳ **Cooldown Timer**
+### **Cooldown Timer**
 
-* 🎯 Visual cooldown display for focus sessions
-* ☕ Perfect for Pomodoro technique (25min work + 5min break)
-* 💪 Habit tracking (exercise, water breaks, eye rest)
-* ⚡ Real-time countdown updates
-* 🔊 Audio/visual alerts when cooldown ends
+* Visual cooldown display for focus sessions
+* Perfect for Pomodoro technique (25min work + 5min break)
+* Habit tracking (exercise, water breaks, eye rest)
+* Real-time countdown updates
+* Audio/visual alerts when cooldown ends
 
-### ⏱️ **Stopwatch**
+### **Stopwatch**
 
-* ▶️ Start / Pause / Reset functionality
-* 🎯 Millisecond-level precision tracking
-* 📊 Ideal for tracking billable hours, meetings, or tasks
-* 💾 Session history (coming soon)
+* Start / Pause / Reset functionality
+* Millisecond-level precision tracking
+* Ideal for tracking billable hours, meetings, or tasks
+* Session history (coming soon)
 
-### 🧰 **Tools Panel**
+### **Tools Panel**
 
 * Central hub for all productivity tools
 * Minimal and lightning-fast interaction
 * Clean, distraction-free interface
 * Easy access without opening new tabs
 
-### ⚡ **Performance**
+### **Performance**
 
 * Lightweight & fast—no bloat
 * Minimal battery/CPU usage
@@ -229,7 +229,7 @@ npm run dev
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Tazkeer/
@@ -240,7 +240,7 @@ Tazkeer/
 ├── node_modules/         # Project dependencies (npm/yarn)
 ├── public/               # Public images/assets
 │   ├── Add new task.png
-│   ├── Cooldown.png
+│   ├── Cooldown. png
 │   ├── Stop Watch.png
 │   ├── Tasks.png
 │   └── Tools.png
@@ -253,7 +253,7 @@ Tazkeer/
 │   │   ├── ReminderCard.tsx
 │   │   ├── Stopwatch.tsx
 │   │   ├── Timer.tsx
-│   │   └── Utilities.tsx
+│   │   └── Utilities. tsx
 │   ├── types/            # TypeScript interfaces/types (e.g., Nexion standard types)
 │   ├── manifest.ts       # Browser extension manifest configuration
 │   ├── popup.tsx         # Extension er main popup UI
@@ -286,7 +286,7 @@ Tazkeer/
 
 ---
 
-## 🛠️ Built With
+## Built With
 
 | Technology       | Purpose                          |
 | ---------------- | -------------------------------- |
@@ -298,24 +298,24 @@ Tazkeer/
 
 ---
 
-## 🔮 Future Plans
+## Future Plans
 
 ### **Version 2.0 Roadmap**
 
-- [ ] 📊 **Analytics Dashboard** – Track productivity trends
-- [ ] 🏷️ **Task Categories & Labels** – Organize by project/context
-- [ ] 🔄 **Cloud Sync** – Sync tasks across devices
-- [ ] 🎨 **Themes** – Dark mode, light mode, and custom themes
-- [ ] 🔊 **Custom Alerts** – Sound, vibration, and notification styles
-- [ ] ⌨️ **Keyboard Shortcuts** – Power user optimizations
-- [ ] 📱 **Mobile Companion App** – iOS & Android support
-- [ ] 🤝 **Team Collaboration** – Shared tasks for teams
-- [ ] 📈 **Reporting** – Export time logs and task history
-- [ ] 🌐 **Multi-language Support** – Localization
+- [ ] **Analytics Dashboard** – Track productivity trends
+- [ ] **Task Categories & Labels** – Organize by project/context
+- [ ] **Cloud Sync** – Sync tasks across devices
+- [ ] **Themes** – Dark mode, light mode, and custom themes
+- [ ] **Custom Alerts** – Sound, vibration, and notification styles
+- [ ] **Keyboard Shortcuts** – Power user optimizations
+- [ ] **Mobile Companion App** – iOS & Android support
+- [ ] **Team Collaboration** – Shared tasks for teams
+- [ ] **Reporting** – Export time logs and task history
+- [ ] **Multi-language Support** – Localization
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions, issues, and feature requests are welcome! 
 
@@ -336,24 +336,24 @@ Contributions, issues, and feature requests are welcome!
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the **MIT License**.
 
-See [LICENSE](LICENSE) for more information.
+See [LICENSE](LICENSE) for more information. 
 
 ---
 
-## 📬 Contact
+## Contact
 
 **Project Name:** Tazkeer  
 **Author:** Tarikul Islam  
 **GitHub:** [@Tarikul3639](https://github.com/Tarikul3639)  
-**Status:** ✅ Actively maintained  
+**Status:** Actively maintained  
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Inspired by the need for simple, distraction-free productivity tools
 - Built with love for the developer and remote work community
@@ -361,14 +361,14 @@ See [LICENSE](LICENSE) for more information.
 
 ---
 
-## ⭐ Show Your Support
+## Show Your Support
 
 If **Tazkeer** helps you stay productive, please consider:
 
-- ⭐ **Star this repository**
-- 🐛 **Report bugs** and suggest features
-- 🤝 **Contribute** to the codebase
-- 📢 **Share** with your network
+- **Star this repository**
+- **Report bugs** and suggest features
+- **Contribute** to the codebase
+- **Share** with your network
 
 ---
 
