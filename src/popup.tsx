@@ -3,32 +3,21 @@ import "~style.css"
 import { AnimatePresence } from "framer-motion"
 import { useEffect, useState } from "react"
 
-import { NewTaskCard } from "~components/NewTaskCard"
-import { ReminderCard } from "~components/ReminderCard"
+import { NewTaskCard } from "~features/NewTaskCard"
+import { ReminderCard } from "~features/ReminderCard"
 
 import { Header } from "./components/Header"
-import Timer from "./components/Timer"
-import Stopwatch from "./components/Stopwatch"
+import Stopwatch from "./features/Stopwatch"
+import Timer from "./features/Timer"
 import ToolsPage from "./features/Utilities"
-
-interface ITask {
-  id: string // crypto.randomUUID()
-  title: string // Task title
-  remindAt: string // ISO date-time
-  date: string // ISO date
-  type: "Daily" | "One-Time" // Task type
-  createdAt: number // timestamp
-  isNotified?: boolean
-}
+import type { IPage, ITask } from "./types"
 
 const TASKS_KEY = "Tazkeer_Tasks"
 
 function IndexPopup() {
   const [tasks, setTasks] = useState<ITask[]>([])
   const [deleting, setDeleting] = useState(false)
-  const [page, setPage] = useState<"tools" | "tasks" | "timer" | "stopwatch">(
-    "tools"
-  )
+  const [page, setPage] = useState<IPage>("tools")
 
   useEffect(() => {
     // request notification permission
@@ -80,7 +69,6 @@ function IndexPopup() {
             <NewTaskCard onAdd={addTask} />{" "}
           </>
         )}
-        
       </AnimatePresence>
       <AnimatePresence initial={false}>
         {page === "timer" && <Timer />}

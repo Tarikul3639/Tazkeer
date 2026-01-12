@@ -3,23 +3,14 @@
 import { AnimatePresence, motion } from "framer-motion"
 import { ArrowRight, CheckSquare, Clock, Sparkles, Timer } from "lucide-react"
 import React from "react"
+import type { ITask, IPage, ITool } from "../types"
 
 interface ToolsPageProps {
-  page: "tools" | "tasks" | "timer" | "stopwatch"
-  setPage: React.Dispatch<
-    React.SetStateAction<"tools" | "tasks" | "timer" | "stopwatch">
-  >
+  page: IPage
+  setPage: React.Dispatch<React.SetStateAction<IPage>>
 }
 
-interface Tool {
-  title: string
-  description: string
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
-  href: "stopwatch" | "timer" | "tasks"
-  color: string
-}
-
-const tools: Tool[] = [
+const tools: ITool[] = [
   {
     title: "Stopwatch",
     description: "Measure time precisely",

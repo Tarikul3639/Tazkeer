@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import { BellRing, Hourglass, Pause, Play, RotateCcw } from "lucide-react"
 import React, { useEffect, useState } from "react"
 
-import { TimeInput } from "./TimeInput"
+import { TimeInput } from "../components/TimeInput"
 
 export default function TimerPage() {
   const [seconds, setSeconds] = useState(0)

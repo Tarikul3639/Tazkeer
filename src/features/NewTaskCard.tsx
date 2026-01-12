@@ -1,23 +1,14 @@
 import { AnimatePresence, motion } from "framer-motion"
 import { ChevronDown, Clock, Plus, Tag } from "lucide-react"
 import React, { useState } from "react"
-
-interface NewTaskCard {
-  id: string // crypto.randomUUID()
-  title: string // Task title
-  remindAt: string // ISO date-time
-  date: string // ISO date
-  type: "Daily" | "One-Time" // Task type
-  createdAt: number // timestamp
-  isNotified?: boolean
-}
+import type { ITask } from "../types"
 
 const TASKS_KEY = "Tazkeer_Tasks"
 
 export const NewTaskCard = ({
   onAdd
 }: {
-  onAdd: (task: NewTaskCard) => void
+  onAdd: (task: ITask) => void
 }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -29,7 +20,7 @@ export const NewTaskCard = ({
     type: "Daily",
     createdAt: Date.now(),
     isNotified: false
-  } as NewTaskCard)
+  } as ITask)
 
   const handleSave = async () => {
     if (!data.title.trim()) {

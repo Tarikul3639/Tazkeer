@@ -1,10 +1,11 @@
 import { Bell, LayoutGrid, Watch } from "lucide-react"
+import type { IPage } from "../types"
 import React from "react"
 
 interface HeaderProps {
-  page: "tools" | "tasks" | "timer" | "stopwatch"
+  page: IPage
   setPage: React.Dispatch<
-    React.SetStateAction<"tools" | "tasks" | "timer" | "stopwatch">
+    React.SetStateAction<IPage>
   >
 }
 

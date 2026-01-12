@@ -1,17 +1,15 @@
 import { motion } from "framer-motion"
 import { CheckCircle2, Clock, MoreVertical, Timer, Trash2 } from "lucide-react"
 import React, { useEffect, useState } from "react"
+import type { ITask } from "../types"
 
 interface ReminderCardProps {
-  task: {
-    id: string
-    title: string
-    remindAt: string
-    date: string
-    type: "Daily" | "One-Time"
-    createdAt: number
-    isNotified?: boolean
-  }
+  task: ITask
+  deleting: boolean
+  onDelete: (id: string) => void
+}
+interface ReminderCardProps {
+  task: ITask
   deleting: boolean
   onDelete: (id: string) => void
 }
