@@ -210,6 +210,9 @@ npm install
 
 # Run extension in development mode
 npm run dev
+
+# OR carate own extension
+npm create plasmo -- . --with-tailwindcss
 ```
 
 ---
