@@ -64,7 +64,7 @@ function IndexPopup() {
   }
 
   return (
-    <div className="w-[420px] bg-blue-50 font-sans">
+    <div className="w-[425px] bg-blue-50 font-sans">
       <Header page={page} setPage={setPage} />
 
       <AnimatePresence initial={false}>
