@@ -5,14 +5,11 @@ import type { ITask } from "../types"
 
 const TASKS_KEY = "Tazkeer_Tasks"
 
-export const NewTaskCard = ({
-  onAdd
-}: {
-  onAdd: (task: ITask) => void
-}) => {
+export const NewTaskCard = ({ onAdd }: { onAdd: (task: ITask) => void }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [data, setData] = useState({
+
+  const [data, setData] = useState<ITask>({
     id: "",
     title: "",
     remindAt: "12:00",
@@ -20,7 +17,7 @@ export const NewTaskCard = ({
     type: "Daily",
     createdAt: Date.now(),
     isNotified: false
-  } as ITask)
+  })
 
   const handleSave = async () => {
     if (!data.title.trim()) {
@@ -28,44 +25,50 @@ export const NewTaskCard = ({
       return
     }
 
-    if (!data.remindAt) {
-      alert("Please select time")
-      return
-    }
-
-    if (!data.date) {
-      alert("Please select date")
-      return
-    }
-
     setIsLoading(true)
+
     try {
-      const newTask = {
+      const newTask: ITask = {
         ...data,
         id: crypto.randomUUID(),
         createdAt: Date.now(),
         isNotified: false
       }
 
-      const stored = localStorage.getItem(TASKS_KEY)
-      const tasks = stored ? JSON.parse(stored) : []
+      // 🔹 Load existing tasks from chrome.storage
+      chrome.storage.local.get([TASKS_KEY], (result) => {
+        const tasks: ITask[] = result[TASKS_KEY] || []
 
-      localStorage.setItem(TASKS_KEY, JSON.stringify([...tasks, newTask]))
+        const updatedTasks = [...tasks, newTask]
 
-      onAdd(newTask)
+        // 🔹 Save to chrome.storage (shared with background.js)
+        chrome.storage.local.set({ [TASKS_KEY]: updatedTasks }, () => {
+          // 🔹 Update UI instantly
+          onAdd(newTask)
 
-      setData({
-        id: "",
-        title: "",
-        remindAt: "12:00",
-        date: new Date().toISOString().split("T")[0],
-        type: "Daily",
-        createdAt: 0,
-        isNotified: false
+          // 🔹 Notify background to schedule alarm
+          chrome.runtime.sendMessage({
+            type: "SCHEDULE_TASK",
+            task: newTask
+          })
+
+          // 🔹 Reset form
+          setData({
+            id: "",
+            title: "",
+            remindAt: "12:00",
+            date: new Date().toISOString().split("T")[0],
+            type: "Daily",
+            createdAt: Date.now(),
+            isNotified: false
+          })
+
+          setIsOpen(false)
+          setIsLoading(false)
+        })
       })
-
-      setIsOpen(false)
-    } finally {
+    } catch (err) {
+      console.error("Failed to save task", err)
       setIsLoading(false)
     }
   }
@@ -82,29 +85,27 @@ export const NewTaskCard = ({
       }}
       exit={{ opacity: 0, height: 0 }}
       transition={{ duration: 0.3 }}
-      className="mx-4 mt-6 bg-white rounded-3xl border-2 border-dashed border-blue-200 shadow-xl shadow-blue-500/5 overflow-hidden">
-
-      {/* The Toggle Button - Always Visible */}
+      className="mx-4 mt-6 bg-white rounded-3xl border-2 border-dashed border-blue-200 shadow-xl shadow-blue-500/5 overflow-hidden"
+    >
+      {/* Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`group w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold transition-all duration-300 active:scale-[0.98] hover:scale-[1.01] ${
           isOpen
             ? "bg-slate-100 text-slate-500 mb-4 hover:bg-pink-50 hover:text-pink-600 shadow-inner"
             : "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
-        }`}>
+        }`}
+      >
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.3 }}>
-          {isOpen ? (
-            <ChevronDown size={20} />
-          ) : (
-            <Plus size={20} className="group-hover:rotate-6" />
-          )}
+          transition={{ duration: 0.3 }}
+        >
+          {isOpen ? <ChevronDown size={20} /> : <Plus size={20} className="group-hover:rotate-6" />}
         </motion.div>
         <span>{isOpen ? "Close Form" : "Assign New Task"}</span>
       </button>
 
-      {/* Expandable Content */}
+      {/* Expandable Form */}
       <AnimatePresence initial={false}>
         {isOpen && (
           <motion.div
@@ -112,8 +113,8 @@ export const NewTaskCard = ({
             animate={{ opacity: 1, y: 0, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="space-y-4">
-            {/* Task Title Input */}
+            className="space-y-4"
+          >
             <div className="relative">
               <input
                 type="text"
@@ -124,7 +125,6 @@ export const NewTaskCard = ({
               />
             </div>
 
-            {/* Date and Time Row */}
             <div className="grid grid-cols-2 gap-3">
               <div className="col-span-1 flex-1 flex items-center gap-2 px-3 py-2.5 bg-blue-50/50 rounded-xl border border-blue-100 focus-within:border-blue-500 transition-colors group">
                 <Clock size={16} className="text-blue-500" />
@@ -132,33 +132,30 @@ export const NewTaskCard = ({
                   type="time"
                   required
                   value={data.remindAt}
-                  onChange={(e) =>
-                    setData({ ...data, remindAt: e.target.value })
-                  }
+                  onChange={(e) => setData({ ...data, remindAt: e.target.value })}
                   className="bg-transparent text-xs font-semibold text-blue-900 outline-none w-full"
                 />
               </div>
+
               <div className="col-span-1 flex-1 flex items-center gap-2 px-3 py-2.5 bg-blue-50/50 rounded-xl border border-blue-100 focus-within:border-blue-500 transition-colors group">
                 <Tag size={16} className="text-blue-500" />
                 <select
                   value={data.type}
                   required
                   onChange={(e) =>
-                    setData({
-                      ...data,
-                      type: e.target.value as "Daily" | "One-Time"
-                    })
+                    setData({ ...data, type: e.target.value as "Daily" | "One-Time" })
                   }
-                  className="bg-transparent text-xs font-semibold text-slate-600 outline-none w-full appearance-none px-2">
+                  className="bg-transparent text-xs font-semibold text-slate-600 outline-none w-full appearance-none px-2"
+                >
                   <option value="Daily">Daily</option>
                   <option value="One-Time">One-Time</option>
                 </select>
               </div>
+
               <div className="col-span-2 flex-1 flex items-center gap-2 px-3 py-2.5 bg-blue-50/50 rounded-xl border border-blue-100 focus-within:border-blue-500 transition-colors group">
                 <Clock size={16} className="text-blue-500" />
                 <input
                   type="date"
-                  defaultValue={new Date().toISOString().split("T")[0]}
                   value={data.date}
                   required
                   onChange={(e) => setData({ ...data, date: e.target.value })}
@@ -167,13 +164,11 @@ export const NewTaskCard = ({
               </div>
             </div>
 
-            {/* Final Save Button */}
             <button
-              disabled={
-                isLoading || !data.title.trim() || !data.remindAt || !data.date
-              }
+              disabled={isLoading || !data.title.trim() || !data.remindAt || !data.date}
               onClick={handleSave}
-              className="w-full flex items-center justify-center gap-2 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all shadow-md active:scale-95 disabled:active:scale-100 disabled:opacity-40 disabled:cursor-not-allowed">
+              className="w-full flex items-center justify-center gap-2 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all shadow-md active:scale-95 disabled:active:scale-100 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
               {isLoading ? <span>Saving...</span> : <span>Save Reminder</span>}
             </button>
           </motion.div>

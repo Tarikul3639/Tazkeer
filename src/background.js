@@ -1,43 +1,74 @@
-// tasks load from storage
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.local.get(["tasks"], ({ tasks = [] }) => {
-    tasks.forEach(scheduleTask)
-  })
-})
+const TASKS_KEY = "Tazkeer_Tasks"
 
-// function to schedule alarm
+// Schedule task alarm
 function scheduleTask(task) {
   const [hour, minute] = task.remindAt.split(":").map(Number)
   const now = new Date()
   let target = new Date(task.date)
   target.setHours(hour, minute, 0, 0)
 
-  // if daily, always next occurrence
   if (task.type === "Daily" && target <= now) {
-    target.setDate(now.getDate() + 1)
+    target.setDate(target.getDate() + 1)
   }
 
-  const diffMs = target.getTime() - now.getTime()
-  if (diffMs > 0) {
-    chrome.alarms.create(task.id, { delayInMinutes: diffMs / 60000 })
+  const when = target.getTime()
+
+  if (when > Date.now()) {
+    chrome.alarms.clear(task.id, () => {
+      chrome.alarms.create(task.id, { when })
+    })
+    console.log(
+      `⏰ Alarm scheduled for "${task.title}" at ${target.toLocaleString()}`
+    )
+  } else {
+    console.log(`⚠️ Skipped "${task.title}" - time passed`)
   }
 }
 
-// Alarm listener
+// On install or startup, schedule existing tasks
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.storage.local.get([TASKS_KEY], (result) => {
+    const tasks = result[TASKS_KEY] || []
+    tasks.forEach(scheduleTask)
+  })
+})
+
+chrome.runtime.onStartup.addListener(() => {
+  chrome.storage.local.get([TASKS_KEY], (result) => {
+    const tasks = result[TASKS_KEY] || []
+    tasks.forEach(scheduleTask)
+  })
+})
+
+// Listen for new task messages from popup
+chrome.runtime.onMessage.addListener((msg) => {
+  if (msg.type === "SCHEDULE_TASK") {
+    console.log("📨 New task received:", msg.task.title)
+    scheduleTask(msg.task)
+  }
+})
+
+// Alarm trigger
 chrome.alarms.onAlarm.addListener((alarm) => {
-  chrome.storage.local.get(["tasks"], ({ tasks = [] }) => {
-    const task = tasks.find(t => t.id === alarm.name)
+  chrome.storage.local.get([TASKS_KEY], (result) => {
+    const tasks = result[TASKS_KEY] || []
+    const task = tasks.find((t) => t.id === alarm.name)
     if (!task) return
 
-    // show notification
-    chrome.notifications.create(task.id, {
+    // use packaged extension icon (hashed filename) to avoid download errors
+    const manifest = chrome.runtime.getManifest()
+    const iconPath =
+      manifest.action?.default_icon?.["128"] || manifest.icons?.["128"]
+    const iconUrl = iconPath ? chrome.runtime.getURL(iconPath) : undefined
+
+    chrome.notifications.create(`notification_${task.id}_${Date.now()}`, {
       type: "basic",
-      iconUrl: "icons/notification.png",
+      iconUrl,
       title: "Reminder",
       message: `It's time for your task: ${task.title}`,
+      requireInteraction: true
     })
 
-    // reschedule if Daily
     if (task.type === "Daily") {
       scheduleTask(task)
     }

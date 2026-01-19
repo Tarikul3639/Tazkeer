@@ -8,5 +8,9 @@ export const manifest = {
   action: {
     default_popup: "popup.html"
   },
-  host_permissions: ["https://*/*"]
+  permissions: ["alarms", "notifications", "storage"],
+  host_permissions: ["https://*/*"],
+  background: {
+    service_worker: "background.js"
+  }
 } as const

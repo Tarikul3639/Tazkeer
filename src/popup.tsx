@@ -17,49 +17,56 @@ const TASKS_KEY = "Tazkeer_Tasks"
 
 function IndexPopup() {
   const [tasks, setTasks] = useState<ITask[]>([])
-  // const [deleting, setDeleting] = useState(false)
   const [page, setPage] = useState<IPage>("tasks")
 
+  // 🔔 request notification permission
   useEffect(() => {
-    // request notification permission
     if (Notification.permission !== "granted") {
       Notification.requestPermission()
     }
   }, [])
 
+  // 📦 load tasks from chrome.storage
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(TASKS_KEY)
-      if (stored) setTasks(JSON.parse(stored))
-    } catch {}
+    chrome.storage.local.get([TASKS_KEY], (result) => {
+      if (Array.isArray(result[TASKS_KEY])) {
+        setTasks(result[TASKS_KEY])
+      }
+    })
   }, [])
 
+  // 💾 helper to save tasks
+  const saveTasks = (updatedTasks: ITask[]) => {
+    setTasks(updatedTasks)
+    chrome.storage.local.set({
+      [TASKS_KEY]: updatedTasks
+    })
+  }
+
+  // ➕ add task
   const addTask = (task: ITask) => {
     const updated = [task, ...tasks]
-    setTasks(updated)
-    localStorage.setItem(TASKS_KEY, JSON.stringify(updated))
+    saveTasks(updated)
   }
 
+  // ❌ delete task
   const deleteTask = (id: string) => {
     const updated = tasks.filter((t) => t.id !== id)
-    setTasks(updated)
-    localStorage.setItem(TASKS_KEY, JSON.stringify(updated))
+    saveTasks(updated)
   }
 
+  // ✅ mark as notified
   const notifyTask = (id: string) => {
-    const updated = tasks.map((t) => {
-      if (t.id === id) {
-        return { ...t, isNotified: true }
-      }
-      return t
-    })
-    setTasks(updated)
-    localStorage.setItem(TASKS_KEY, JSON.stringify(updated))
+    const updated = tasks.map((t) =>
+      t.id === id ? { ...t, isNotified: true } : t
+    )
+    saveTasks(updated)
   }
 
   return (
     <div className="w-[420px] bg-blue-50 font-sans">
       <Header page={page} setPage={setPage} />
+
       <AnimatePresence initial={false}>
         {page === "tools" && <ToolsPage page={page} setPage={setPage} />}
       </AnimatePresence>
@@ -68,7 +75,7 @@ function IndexPopup() {
         {page === "tasks" && (
           <>
             <div className="space-y-2 p-3 border-t border-b border-blue-100">
-              {/* Header Section */}
+              {/* Header */}
               <div className="px-5 py-4 flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-black text-slate-800 tracking-tight">
@@ -90,6 +97,7 @@ function IndexPopup() {
                   </div>
                 </div>
               </div>
+
               {tasks.map((task) => (
                 <ReminderCard
                   key={task.id}
@@ -100,17 +108,21 @@ function IndexPopup() {
                 />
               ))}
             </div>
+
             <NewTaskCard onAdd={addTask} />
           </>
         )}
       </AnimatePresence>
+
       <AnimatePresence initial={false}>
         {page === "timer" && <Timer />}
       </AnimatePresence>
+
       <AnimatePresence initial={false}>
         {page === "stopwatch" && <Stopwatch />}
       </AnimatePresence>
     </div>
   )
 }
+
 export default IndexPopup

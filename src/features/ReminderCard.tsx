@@ -50,17 +50,17 @@ export function ReminderCard({ task, deleting, onDelete, onNotify }: ReminderCar
       const diffHrs = Math.floor(diffMs / (1000 * 60 * 60))
       const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60))
       const diffSecs = Math.floor((diffMs % (1000 * 60)) / 1000)
-      console.log({ diffHrs, diffMins, diffSecs })
+      // console.log({ diffHrs, diffMins, diffSecs })
 
       if (diffHrs == 23 && diffMins == 59) {
         setTimeLeft("Now")
-        if (!task.isNotified && onNotify) {
-          new Notification("Reminder", {
-            body: `It's time for your task: ${task.title}`
-          })
-          task.isNotified = true
-          onNotify(task.id)
-        }
+        // if (!task.isNotified && onNotify) {
+        //   new Notification("Reminder", {
+        //     body: `It's time for your task: ${task.title}`
+        //   })
+        //   task.isNotified = true
+        //   onNotify(task.id)
+        // }
         return
       }
 
