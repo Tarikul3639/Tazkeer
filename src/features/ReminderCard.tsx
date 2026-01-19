@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import { CalendarDays, CheckCircle2, Clock, Timer, Trash2 } from "lucide-react"
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
 import type { ITask } from "../types"
 

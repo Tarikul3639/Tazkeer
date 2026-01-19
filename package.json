@@ -12,6 +12,7 @@
   "dependencies": {
     "framer-motion": "^12.25.0",
     "lucide-react": "^0.562.0",
+    "motion": "^12.27.1",
     "plasmo": "0.90.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -40,5 +41,15 @@
     "host_permissions": [
       "https://*/*"
     ]
+  },
+  "ico": "assets/icon.ico",
+  "plasmo": {
+    "icons": {
+      "16": "assets/icon-16.ico",
+      "32": "assets/icon-32.ico",
+      "48": "assets/icon-48.ico",
+      "64": "assets/icon-64.ico",
+      "128": "assets/icon-128.ico"
+    }
   }
 }
