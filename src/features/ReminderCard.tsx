@@ -1,14 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import {
-  CalendarDays,
-  CheckCircle2,
-  Clock,
-  MoreVertical,
-  Timer,
-  Trash2
-} from "lucide-react"
+import { CalendarDays, CheckCircle2, Clock, Timer, Trash2 } from "lucide-react"
 import React, { useEffect, useState } from "react"
 
 import type { ITask } from "../types"
@@ -17,9 +10,10 @@ interface ReminderCardProps {
   task: ITask
   deleting: boolean
   onDelete: (id: string) => void
+  onNotify?: (id: string) => void
 }
 
-export function ReminderCard({ task, deleting, onDelete }: ReminderCardProps) {
+export function ReminderCard({ task, deleting, onDelete, onNotify }: ReminderCardProps) {
   const [timeLeft, setTimeLeft] = useState<string>("")
 
   // Time Formatting
@@ -41,8 +35,10 @@ export function ReminderCard({ task, deleting, onDelete }: ReminderCardProps) {
 
       let targetTime = new Date(year, month - 1, day, hours, minutes, 0, 0)
 
-      if (targetTime.getTime() <= now.getTime() && task.type === "Daily") {
-        targetTime.setDate(targetTime.getDate() + 1)
+      if (task.type === "Daily") {
+        if (targetTime.getTime() <= now.getTime()) {
+          targetTime.setDate(now.getDate() + 1)
+        }
       }
 
       const diffMs = targetTime.getTime() - now.getTime()
@@ -58,13 +54,19 @@ export function ReminderCard({ task, deleting, onDelete }: ReminderCardProps) {
 
       if (diffHrs == 23 && diffMins == 59) {
         setTimeLeft("Now")
+        if (!task.isNotified && onNotify) {
+          new Notification("Reminder", {
+            body: `It's time for your task: ${task.title}`
+          })
+          task.isNotified = true
+          onNotify(task.id)
+        }
         return
       }
 
       if (diffHrs > 0) setTimeLeft(`${diffHrs}h ${diffMins}m`)
       else if (diffMins > 0) setTimeLeft(`${diffMins}m ${diffSecs}s`)
-      else if (diffSecs >= 0) setTimeLeft(`${diffSecs}s`)
-      else setTimeLeft("Passed")
+      else setTimeLeft(`${diffSecs}s`)
     }
 
     calculateTimeLeft()

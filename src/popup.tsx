@@ -46,6 +46,17 @@ function IndexPopup() {
     localStorage.setItem(TASKS_KEY, JSON.stringify(updated))
   }
 
+  const notifyTask = (id: string) => {
+    const updated = tasks.map((t) => {
+      if (t.id === id) {
+        return { ...t, isNotified: true }
+      }
+      return t
+    })
+    setTasks(updated)
+    localStorage.setItem(TASKS_KEY, JSON.stringify(updated))
+  }
+
   return (
     <div className="w-[420px] bg-blue-50 font-sans">
       <Header page={page} setPage={setPage} />
@@ -85,6 +96,7 @@ function IndexPopup() {
                   task={task}
                   deleting={false}
                   onDelete={deleteTask}
+                  onNotify={notifyTask}
                 />
               ))}
             </div>
